@@ -2,6 +2,7 @@ package cert
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -22,7 +23,10 @@ type Saver interface {
 }
 
 func New(course, name, date string) (*Cert, error) {
-	c := course
+	c, err := validateCourse(course)
+	if err != nil {
+		return nil, err
+	}
 	n := name
 	d := date
 
@@ -36,4 +40,12 @@ func New(course, name, date string) (*Cert, error) {
 		LabelDate:          fmt.Sprintf("Date: %v", d),
 	}
 	return cert, nil
+}
+
+func validateCourse(course string) (string, error) {
+	c := course
+	if !strings.HasSuffix(c, " course") {
+		c = c + " course"
+	}
+	return strings.ToUpper(c), nil
 }

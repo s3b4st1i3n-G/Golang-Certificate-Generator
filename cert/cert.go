@@ -43,9 +43,20 @@ func New(course, name, date string) (*Cert, error) {
 }
 
 func validateCourse(course string) (string, error) {
-	c := course
+	c, err := validateStr(course)
+	if err != nil {
+		return "", err
+	}
 	if !strings.HasSuffix(c, " course") {
 		c = c + " course"
 	}
 	return strings.ToUpper(c), nil
+}
+
+func validateStr(str string) (string, error) {
+	c := strings.TrimSpace(str)
+	if len(c) <= 0 || len(c) > 20 {
+		return c, fmt.Errorf("invalid string. got='%s', len=%d", c, len(c))
+	}
+	return c, nil
 }

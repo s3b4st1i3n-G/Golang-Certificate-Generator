@@ -11,8 +11,21 @@ func TestValidCertData(t *testing.T) {
 		t.Errorf("Cert should not be empty. got=nil")
 	}
 
-	var expectedName string = "GOLANG COURSE"
-	if c.Course != expectedName {
-		t.Errorf("Course name is invalid. Shoudl have "+expectedName+". got=%v", c.Course)
+	if c.Course != "GOLANG COURSE" {
+		t.Errorf("Course name is invalid. Shoudl have 'GOLANG COURSE'. got=%v", c.Course)
+	}
+}
+
+func TestCourseEmptyValue(t *testing.T) {
+	_, err := New("", "Bob", "2018-05-31")
+	if err == nil {
+		t.Errorf("Error should be returned for empty course")
+	}
+}
+
+func TestCourseNameTooLong(t *testing.T) {
+	_, err := New("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "Bob", "2018-05-31")
+	if err == nil {
+		t.Errorf("Error should be returned when course's name is too long")
 	}
 }

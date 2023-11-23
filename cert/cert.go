@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+var maxLengthCourse = 20
+var maxLengthName = 30
+
 type Cert struct {
 	Course string
 	Name   string
@@ -23,11 +26,16 @@ type Saver interface {
 }
 
 func New(course, name, date string) (*Cert, error) {
+
 	c, err := validateCourse(course)
 	if err != nil {
 		return nil, err
 	}
-	n := name
+	n, err := validateName(name)
+	if err != nil {
+		return nil, err
+	}
+
 	d := date
 
 	cert := &Cert{
@@ -43,7 +51,7 @@ func New(course, name, date string) (*Cert, error) {
 }
 
 func validateCourse(course string) (string, error) {
-	c, err := validateStr(course)
+	c, err := validateStr(course, maxLengthCourse)
 	if err != nil {
 		return "", err
 	}
@@ -53,10 +61,20 @@ func validateCourse(course string) (string, error) {
 	return strings.ToUpper(c), nil
 }
 
-func validateStr(str string) (string, error) {
+func validateStr(str string, maxLen int) (string, error) {
 	c := strings.TrimSpace(str)
-	if len(c) <= 0 || len(c) > 20 {
+	if len(c) <= 0 {
+		return c, fmt.Errorf("invalid string. got='%s', len=%d", c, len(c))
+	} else if len(c) > maxLen {
 		return c, fmt.Errorf("invalid string. got='%s', len=%d", c, len(c))
 	}
 	return c, nil
+}
+
+func validateName(name string) (string, error) {
+	n, err := validateStr(name, maxLengthName)
+	if err != nil {
+		return "", err
+	}
+	return strings.ToUpper(n), nil
 }

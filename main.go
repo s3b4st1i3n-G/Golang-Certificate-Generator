@@ -17,7 +17,7 @@ func main() {
 	var saver cert.Saver
 	saver, err = pdf.New("output")
 	if err != nil {
-		fmt.Printf("Error during cpdg generation: %v", err)
+		fmt.Printf("Error during pdf generation: %v", err)
 		os.Exit(1)
 	}
 	saver.Save(*c)

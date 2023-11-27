@@ -30,6 +30,9 @@ func (p *PdfSaver) Save(cert cert.Cert) error {
 	pdf.SetTitle(cert.LabelTitle, false)
 	pdf.AddPage()
 
+	// header
+	header(pdf, &cert)
+
 	filename := fmt.Sprintf("%v.pdf", cert.LabelTitle)
 	path := path.Join(p.OutputDir, filename)
 	err := pdf.OutputFileAndClose(path)
@@ -38,4 +41,9 @@ func (p *PdfSaver) Save(cert cert.Cert) error {
 	}
 	fmt.Sprintf("Saved certificate to '%v'\n", path)
 	return nil
+}
+
+func header(pdf *gofpdf.Fpdf, c *cert.Cert) {
+	pdf.SetFont("Helvetica", "", 40)
+	pdf.WriteAligned(0, 50, c.LabelCompletion, "C")
 }

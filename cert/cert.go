@@ -36,7 +36,10 @@ func New(course, name, date string) (*Cert, error) {
 		return nil, err
 	}
 
-	d := date
+	d, err := parseDate(date)
+	if err != nil {
+		return nil, err
+	}
 
 	cert := &Cert{
 		Course:             c,
@@ -45,7 +48,7 @@ func New(course, name, date string) (*Cert, error) {
 		LabelCompletion:    "Certificate Of Completion",
 		LabelPresented:     "This Certificate Is Presented To",
 		LabelParticipation: fmt.Sprintf("For participation in the %v", c),
-		LabelDate:          fmt.Sprintf("Date: %v", d),
+		LabelDate:          fmt.Sprintf("Date: %v", d.Format("02/01/2006")),
 	}
 	return cert, nil
 }
@@ -77,4 +80,12 @@ func validateName(name string) (string, error) {
 		return "", err
 	}
 	return strings.ToUpper(n), nil
+}
+
+func parseDate(date string) (time.Time, error) {
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return t, err
+	}
+	return t, nil
 }

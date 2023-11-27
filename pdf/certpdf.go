@@ -36,6 +36,10 @@ func (p *PdfSaver) Save(cert cert.Cert) error {
 
 	// body
 	body(pdf, &cert)
+	pdf.Ln(30)
+
+	// footer
+	footer(pdf, &cert)
 
 	filename := fmt.Sprintf("%v.pdf", cert.LabelTitle)
 	path := path.Join(p.OutputDir, filename)
@@ -55,16 +59,21 @@ func header(pdf *gofpdf.Fpdf, c *cert.Cert) {
 func body(pdf *gofpdf.Fpdf, c *cert.Cert) {
 	pdf.SetFont("Helvetica", "I", 20)
 	pdf.WriteAligned(0, 50, c.LabelPresented, "C")
-	pdf.Ln(30)
+	pdf.Ln(20)
 
 	pdf.SetFont("Times", "B", 40)
 	pdf.WriteAligned(0, 50, c.Name, "C")
-	pdf.Ln(30)
+	pdf.Ln(20)
 
 	pdf.SetFont("Helvetica", "I", 20)
 	pdf.WriteAligned(0, 50, c.LabelParticipation, "C")
-	pdf.Ln(30)
+	pdf.Ln(20)
 
 	pdf.SetFont("Helvetica", "I", 15)
 	pdf.WriteAligned(0, 50, c.LabelDate, "C")
+}
+
+func footer(pdf *gofpdf.Fpdf, c *cert.Cert) {
+	pdf.SetFont("Helvetica", "", 10)
+	pdf.WriteAligned(0, 50, "This certificate is provided by S.G. It is strictly forbidden to reproduce it", "C")
 }
